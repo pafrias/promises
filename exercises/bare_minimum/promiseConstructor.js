@@ -11,17 +11,28 @@ Promise.promisifyAll(fs);
 
 // This function should retrieve the first line of the file at `filePath`
 var pluckFirstLineFromFileAsync = function(filePath) {
-  //return new Promise((successcb, failurecb) => {});
-  
+
   return fs.readFileAsync(filePath).then((data) => {
     var firstLine = data.toString();
     firstLine = firstLine.split('\n')[0];
     return firstLine;
-  }).catch(() => { throw 'error' })
+  }).catch(err => { throw(err) });
 };
+
 // This function should retrieve the status code of a GET request to `url`
 var getStatusCodeAsync = function(url) {
-  // TODO
+  
+  return new Promise((resolve, reject) => {
+    request(url, (err,data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  }).then(data => {
+    return data.statusCode;
+  }).catch(err => { throw(err) });
 };
 
 // Export these functions so we can test them and reuse them in later exercises
